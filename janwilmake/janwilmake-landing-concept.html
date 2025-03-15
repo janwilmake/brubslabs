@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOW ME WHAT YOU GOT - Indie Creators Community</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-image: url('bg.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .text-content {
+            font-weight: 500;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+        }
+
+        .hover-float:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body class="text-white">
+    <div class="container mx-auto px-4 py-12">
+        <!-- Additional glassmorphism background element for better text readability -->
+        <div class="fixed inset-0 bg-gradient-to-b from-transparent to-black opacity-40 z-0"></div>
+        <nav class="flex justify-between items-center mb-16 relative z-10">
+            <div class="text-2xl font-bold text-glow">Brubs Labs</div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#" class="hover:text-yellow-300 transition duration-300">Home</a>
+                <a href="#" class="hover:text-yellow-300 transition duration-300">Discover</a>
+                <a href="#" class="hover:text-yellow-300 transition duration-300">About</a>
+                <a href="#" class="hover:text-yellow-300 transition duration-300">Contact</a>
+            </div>
+            <button class="glass px-6 py-2 rounded-full hover-float transition duration-300">Sign In</button>
+        </nav>
+
+        <main class="mt-12 md:mt-24 relative z-10">
+            <div class="text-center max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 text-glow tracking-tight">SHOW ME WHAT YOU GOT</h1>
+                <p class="text-xl md:text-2xl mb-12 text-content">Join our cosmic collective of indie creators breaking
+                    boundaries and defining the future of digital art, games, and experiences.</p>
+
+                <div class="flex flex-col md:flex-row gap-6 justify-center">
+                    <button
+                        class="glass px-8 py-4 rounded-full text-lg font-semibold hover-float transition duration-300 bg-gradient-to-r from-purple-500 to-pink-500">
+                        Submit Your Brub
+                    </button>
+                    <button
+                        class="glass px-8 py-4 rounded-full text-lg font-semibold hover-float transition duration-300">
+                        Explore Submissions
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-24 md:mt-32">
+                <h2 class="text-3xl font-bold text-center mb-12 text-glow">Why Join Our Universe?</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass p-8 rounded-xl hover-float transition duration-300">
+                        <div class="text-5xl mb-4">🚀</div>
+                        <h3 class="text-xl font-bold mb-4">Gain Visibility</h3>
+                        <p class="text-content">Get your work in front of passionate fans, fellow creators, and industry
+                            scouts looking for the next big thing.</p>
+                    </div>
+
+                    <div class="glass p-8 rounded-xl hover-float transition duration-300">
+                        <div class="text-5xl mb-4">🔗</div>
+                        <h3 class="text-xl font-bold mb-4">Build Connections</h3>
+                        <p class="text-content">Connect with like-minded creators for collaborations, feedback, and
+                            support on your creative journey.</p>
+                    </div>
+
+                    <div class="glass p-8 rounded-xl hover-float transition duration-300">
+                        <div class="text-5xl mb-4">💎</div>
+                        <h3 class="text-xl font-bold mb-4">Access Resources</h3>
+                        <p class="text-content">Tap into exclusive tools, funding opportunities, and mentorship to take
+                            your projects to the next level.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-24 text-center">
+                <h2 class="text-3xl font-bold mb-8 text-glow">Ready to Show Us What You Got?</h2>
+                <p class="text-xl mb-10 max-w-2xl mx-auto text-content">Whether you're creating games, digital art,
+                    music, or something entirely new, our community wants to see your vision.</p>
+                <button
+                    class="glass px-10 py-4 rounded-full text-xl font-semibold hover-float transition duration-300 bg-gradient-to-r from-yellow-400 to-orange-500">
+                    Join Brubs Labs
+                </button>
+            </div>
+        </main>
+
+        <footer class="mt-32 mb-8 text-center opacity-70">
+            <p>© 2025 CreatorVerse | Privacy Policy | Terms of Service</p>
+        </footer>
+    </div>
+</body>
+
+</html>
