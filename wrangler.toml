@@ -1,0 +1,6 @@
+name = "brubslabs"
+compatibility_date = "2025-03-15"
+dev.port = 3000
+assets.directory = "./"
+route.pattern = "brubslabs.com"
+route.custom_domain = true

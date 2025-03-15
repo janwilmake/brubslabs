@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>brubs labs - Show Me What You Got!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+            background-color: #21a184;
+            color: #333;
+        }
+
+        #background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.9;
+            background: url('/api/placeholder/1920/1080') center center/cover no-repeat;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: -1;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 2rem;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(3px);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #00DDAA;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(0, 221, 170, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .nav-links a {
+            color: #444;
+            text-decoration: none;
+            font-size: 0.95rem;
+            position: relative;
+            padding: 0.4rem 0;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #00DDAA;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: #00DDAA;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        .hero-heading {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            color: #00DDAA;
+            text-shadow: 0 0 15px rgba(0, 221, 170, 0.7);
+            transform: translateY(-50px);
+            opacity: 0;
+            animation: fadeInUp 1s forwards 0.5s;
+        }
+
+        .hero-tagline {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: white;
+            transform: translateY(-30px);
+            opacity: 0;
+            animation: fadeInUp 1s forwards 0.8s;
+        }
+
+        .join-button {
+            padding: 1.2rem 3rem;
+            font-size: 1.5rem;
+            background: #00DDAA;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(0, 221, 170, 0.4);
+            margin-top: 1rem;
+        }
+        
+        .join-button:hover {
+            background: white;
+            transform: scale(1.05);
+            box-shadow: 0 5px 25px rgba(0, 221, 170, 0.6);
+        }
+        
+        .button-container {
+            margin-top: 2rem;
+        }
+
+        .floating-head {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: #FFD700;
+            border-radius: 50% 50% 45% 45%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .floating-head:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .head-eye {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+            margin: 5px;
+        }
+
+        .head-eye::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: black;
+            border-radius: 50%;
+            top: 7px;
+            left: 7px;
+        }
+
+        .head-eyes {
+            display: flex;
+            margin-top: 15px;
+        }
+
+        .head-mouth {
+            width: 60px;
+            height: 15px;
+            background: #1a1a1a;
+            border-radius: 0 0 30px 30px;
+            margin-top: 10px;
+        }
+
+        .section {
+            padding: 6rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-heading {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            color: #00DDAA;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 221, 170, 0.5);
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 221, 170, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #00A080;
+        }
+
+        .card-description {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .card-link {
+            color: #00A080;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-link:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #threeContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            color: #00DDAA;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .social-links a:hover {
+            background: #00DDAA;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 221, 170, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(0, 221, 170, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 221, 170, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="background"></div>
+    <div class="overlay"></div>
+    <div id="threeContainer"></div>
+
+
+
+    <div class="hero">
+        <h1 class="hero-heading">SHOW ME WHAT YOU GOT!</h1>
+        <p class="hero-tagline">Join our universe of creative ideas & side projects</p>
+        <div class="button-container">
+            <button class="cta-button pulse join-button">join brubs labs</button>
+        </div>
+    </div>
+
+    <section id="about" class="section">
+        <h2 class="section-heading">What's a Brub?</h2>
+        <div class="cards-container">
+            <div class="card">
+                <h3 class="card-title">Fun Projects</h3>
+                <p class="card-description">A Brub is your passion project, that cool idea you've been working on in your spare time. It's the code that makes you smile, the design that inspires you.</p>
+                <a href="#" class="card-link">Learn more →</a>
+            </div>
+            <div class="card">
+                <h3 class="card-title">Creative Freedom</h3>
+                <p class="card-description">No rules, no deadlines, just pure creative expression. Brubs are about enjoying the process and sharing your unique perspective with others.</p>
+                <a href="#" class="card-link">Browse examples →</a>
+            </div>
+            <div class="card">
+                <h3 class="card-title">Community Driven</h3>
+                <p class="card-description">Every Brub adds to our collective creative universe. Collaborate, get feedback, and inspire others in our growing community of makers.</p>
+                <a href="#" class="card-link">Meet the community →</a>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <footer>
+        <div class="footer-logo">brubs labs</div>
+        <p class="footer-text">A cosmic collection of creative side projects and fun ideas</p>
+        
+        <p class="copyright">© 2025 brubs labs | A Dimension C-137 Creation</p>
+    </footer>
+
+    <script>
+        // Create floating heads
+        const createFloatingHead = () => {
+            const head = document.createElement('div');
+            head.className = 'floating-head';
+            
+            const eyes = document.createElement('div');
+            eyes.className = 'head-eyes';
+            
+            const eye1 = document.createElement('div');
+            eye1.className = 'head-eye';
+            
+            const eye2 = document.createElement('div');
+            eye2.className = 'head-eye';
+            
+            const mouth = document.createElement('div');
+            mouth.className = 'head-mouth';
+            
+            eyes.appendChild(eye1);
+            eyes.appendChild(eye2);
+            head.appendChild(eyes);
+            head.appendChild(mouth);
+            
+            // Random position
+            const xPos = Math.random() * window.innerWidth;
+            const yPos = Math.random() * window.innerHeight;
+            
+            head.style.left = `${xPos}px`;
+            head.style.top = `${yPos}px`;
+            
+            // Random animation duration
+            const animDuration = 5 + Math.random() * 7;
+            head.style.animation = `float ${animDuration}s infinite`;
+            
+            document.body.appendChild(head);
+            
+            // Make it interactive
+            head.addEventListener('click', () => {
+                head.style.transform = 'scale(1.2) rotate(10deg)';
+                setTimeout(() => {
+                    head.style.transform = '';
+                }, 300);
+                
+                // Say a random phrase
+                const phrases = [
+                    "I LIKE WHAT YOU GOT!",
+                    "SHOW ME WHAT YOU GOT!",
+                    "GOOD JOB!",
+                    "DISQUALIFIED!",
+                    "SUBMIT YOUR BRUB!"
+                ];
+                
+                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+                
+                const speech = document.createElement('div');
+                speech.style.position = 'absolute';
+                speech.style.background = 'white';
+                speech.style.color = 'black';
+                speech.style.padding = '10px';
+                speech.style.borderRadius = '10px';
+                speech.style.top = '-60px';
+                speech.style.left = '50%';
+                speech.style.transform = 'translateX(-50%)';
+                speech.style.fontWeight = 'bold';
+                speech.style.zIndex = '1000';
+                speech.style.whiteSpace = 'nowrap';
+                speech.textContent = phrase;
+                
+                head.appendChild(speech);
+                
+                setTimeout(() => {
+                    speech.remove();
+                }, 2000);
+            });
+            
+            return head;
+        };
+        
+        // Create 5 floating heads
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                createFloatingHead();
+            }, i * 1000);
+        }
+        
+        // Three.js background
+        const initThree = () => {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('threeContainer').appendChild(renderer.domElement);
+            
+            // Create stars
+            const starsGeometry = new THREE.BufferGeometry();
+            const starsMaterial = new THREE.PointsMaterial({
+                color: 0xFFFFFF,
+                size: 0.5
+            });
+            
+            const starsVertices = [];
+            for (let i = 0; i < 1000; i++) {
+                const x = (Math.random() - 0.5) * 2000;
+                const y = (Math.random() - 0.5) * 2000;
+                const z = (Math.random() - 0.5) * 2000;
+                starsVertices.push(x, y, z);
+            }
+            
+            starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+            const stars = new THREE.Points(starsGeometry, starsMaterial);
+            scene.add(stars);
+            
+            camera.position.z = 5;
+            
+            // Animation
+            const animate = () => {
+                requestAnimationFrame(animate);
+                
+                stars.rotation.x += 0.0001;
+                stars.rotation.y += 0.0001;
+                
+                renderer.render(scene, camera);
+            };
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+        
+        // Initialize Three.js
+        initThree();
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 60, // Offset for the fixed navbar
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Update background image src to the one specified in the requirements
+        document.getElementById('background').style.backgroundImage = "url('smwyg.png')";
+    </script>
+</body>
+</html>
